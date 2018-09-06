@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
     private ParticleSystem.EmissionModule _smoke1;
     private ParticleSystem.EmissionModule _smoke2;
     private JumpController jc;
+    private bool jump;
 
     [Range(0f, 1f)]
     public float baked;
@@ -39,13 +40,22 @@ public class PlayerController : MonoBehaviour {
         input = Input.GetAxis("Horizontal");
         CheckSun();
         BakeEgg();
+
+        if(jump){
+            if(Input.GetKeyDown(KeyCode.UpArrow)){
+                if(Physics.Raycast(this.transform.position, Vector3.down, 1f)){
+                    rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+                    Debug.Log("jump");
+                }
+            }
+        }
 	}
     void FixedUpdate() {
         if (baked < 1f) Move(input);
         else
         {
             jc.enabled = true;
-            jc.SetProperty(rb,smoke);
+            jc.SetProperty(rb, smoke, kimi);
             Destroy(this);
         }
     }
@@ -88,7 +98,7 @@ public class PlayerController : MonoBehaviour {
     private float bakeSpeed = 0.08f;
     private void CheckSun(){
         Ray ray = new Ray(this.transform.position, Vector3.up);
-        isBaked = !Physics.Raycast(ray);
+        isBaked = !Physics.Raycast(ray, 8f);
     }
     private void BakeEgg(){
         if (!isBaked)
@@ -108,6 +118,7 @@ public class PlayerController : MonoBehaviour {
             kimiNormPos = kimi.transform.localPosition.x;
             kimiDistrict = 0.07f;
             _smoke1.rateOverTime = _smoke2.rateOverTime = 2f;
+            jump = true;
         }
         else if (baked >= 1f)
         {

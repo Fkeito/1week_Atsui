@@ -6,6 +6,7 @@ public class JumpController : MonoBehaviour {
 
     private Rigidbody rb;
     private GameObject smoke;
+    private GameObject kimi;
 
 	// Use this for initialization
 	void Start () {
@@ -18,13 +19,14 @@ public class JumpController : MonoBehaviour {
 		
 	}
 
-    public void SetProperty(Rigidbody rb, GameObject smoke){
+    public void SetProperty(Rigidbody rb, GameObject smoke, GameObject kimi){
         this.rb = rb;
         this.smoke = smoke;
+        this.kimi = kimi;
     }
     private void Jump()
     {
-        rb.AddForce(Vector3.up * 20, ForceMode.Impulse);
+        rb.AddForceAtPosition(Vector3.up * 20, kimi.transform.position, ForceMode.Impulse);
     }
 
     private IEnumerator DelayMethod(System.Action action, float delayTime = 1f){
