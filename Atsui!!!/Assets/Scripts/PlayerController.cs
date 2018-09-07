@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    private GameObject manager;
+
     private Rigidbody rb;
     public float speed = 3f;
 
@@ -28,6 +30,8 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        manager = GameObject.Find("IroIroManager");
+
         rb = this.GetComponent<Rigidbody>();
         _smoke1 = smoke1.emission;
         _smoke2 = smoke2.emission;
@@ -36,10 +40,12 @@ public class PlayerController : MonoBehaviour {
 
     private float input;
 	// Update is called once per frame
-	void Update () {
+    void Update () {
         input = Input.GetAxis("Horizontal");
+
+        isBaked = false;
         CheckSun();
-        BakeEgg();
+        CheckHotSpot();
 
         if(jump){
             if(Input.GetKeyDown(KeyCode.UpArrow)){
@@ -50,12 +56,17 @@ public class PlayerController : MonoBehaviour {
             }
         }
 	}
+    void LateUpdate()
+    {
+        BakeEgg();
+    }
     void FixedUpdate() {
         if (baked < 1f) Move(input);
         else
         {
             jc.enabled = true;
             jc.SetProperty(rb, smoke, kimi);
+            manager.GetComponent<ScoreController>().ShowCanvas(true);
             Destroy(this);
         }
     }
@@ -95,10 +106,18 @@ public class PlayerController : MonoBehaviour {
     }
 
     private bool isBaked;
+    [HideInInspector]
+    public bool isBakedByHotSpot;
     private float bakeSpeed = 0.08f;
+    public void SetBakeSpeed(float speed){
+        bakeSpeed = speed;
+    }
+    private void CheckHotSpot(){
+        if (isBakedByHotSpot) isBaked = true;
+    }
     private void CheckSun(){
         Ray ray = new Ray(this.transform.position, Vector3.up);
-        isBaked = !Physics.Raycast(ray, 8f);
+        if (!Physics.Raycast(ray, 8f)) isBaked = true;
     }
     private void BakeEgg(){
         if (!isBaked)
