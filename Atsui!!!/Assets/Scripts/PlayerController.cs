@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public bool cheatMode;
+
     private GameObject manager;
 
     private Rigidbody rb;
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         manager = GameObject.Find("IroIroManager");
+        if(cheatMode) manager.GetComponent<ScoreController>().ShowCanvas(true);
 
         rb = this.GetComponent<Rigidbody>();
         _smoke1 = smoke1.emission;
@@ -43,9 +46,27 @@ public class PlayerController : MonoBehaviour {
     void Update () {
         input = Input.GetAxis("Horizontal");
 
-        isBaked = false;
-        CheckSun();
-        CheckHotSpot();
+        if (!cheatMode)
+        {
+            isBaked = false;
+            CheckSun();
+            CheckHotSpot();
+        }
+        else{
+            if (Input.GetKey(KeyCode.E)) BakeEgg(true);
+            else if (Input.GetKey(KeyCode.Q)) BakeEgg(false);
+
+            if (Input.GetKeyDown(KeyCode.LeftShift)) rb.isKinematic = true;
+            if (Input.GetKey(KeyCode.LeftShift)) this.transform.position += 3f * Vector3.up * Time.deltaTime;
+            if (Input.GetKeyUp(KeyCode.LeftShift)) rb.isKinematic = false;
+
+            if(Input.GetKeyDown(KeyCode.Space)){
+                jc.enabled = true;
+                jc.SetProperty(rb, smoke, kimi);
+                manager.GetComponent<ScoreController>().ShowCanvas(true);
+                Destroy(this);
+            }
+        }
 
         if(jump){
             if(Input.GetKeyDown(KeyCode.UpArrow)){
@@ -58,16 +79,22 @@ public class PlayerController : MonoBehaviour {
 	}
     void LateUpdate()
     {
-        BakeEgg();
+        if(!cheatMode) BakeEgg();
     }
     void FixedUpdate() {
-        if (baked < 1f) Move(input);
-        else
+        if (!cheatMode)
         {
-            jc.enabled = true;
-            jc.SetProperty(rb, smoke, kimi);
-            manager.GetComponent<ScoreController>().ShowCanvas(true);
-            Destroy(this);
+            if (baked < 1f) Move(input);
+            else
+            {
+                jc.enabled = true;
+                jc.SetProperty(rb, smoke, kimi);
+                manager.GetComponent<ScoreController>().ShowCanvas(true);
+                Destroy(this);
+            }
+        }
+        else{
+            Move(input);
         }
     }
 
@@ -92,15 +119,6 @@ public class PlayerController : MonoBehaviour {
             kimi.transform.localPosition = tmpPos;
             return;
         }
-        /*
-        if (kimi.transform.localPosition.x <= kimiNormPos + kimiDistrict && kimi.transform.localPosition.x <= 0.12f && kimi.transform.localPosition.x >= kimiNormPos - kimiDistrict && kimi.transform.localPosition.x >= -0.12f)
-        {
-            Vector3 tmpPos = kimi.transform.localPosition;
-            tmpPos.x += move;
-            kimi.transform.localPosition = tmpPos;
-            return;
-        }
-        //*/
 
         rb.position += move * Vector3.right;
     }
@@ -132,6 +150,36 @@ public class PlayerController : MonoBehaviour {
         baked += bakeSpeed * Time.deltaTime;
         SetBaked();
         if(System.Math.Abs(baked - 0.5f) < 1E-2f)
+        {
+            //speed = 0.5f;
+            kimiNormPos = kimi.transform.localPosition.x;
+            kimiDistrict = 0.07f;
+            _smoke1.rateOverTime = _smoke2.rateOverTime = 2f;
+            jump = true;
+        }
+        else if (baked >= 1f)
+        {
+            //speed = 0f;
+            kimiNormPos = kimi.transform.localPosition.x;
+            kimiDistrict = 0f;
+            _smoke1.rateOverTime = _smoke2.rateOverTime = 5f;
+        }
+    }
+    private void BakeEgg(bool plus)
+    {
+        if (!plus)
+        {
+            if (smoke.activeSelf) smoke.SetActive(false);
+            baked -= 0.1f * Time.deltaTime;
+            return;
+        }
+
+        if (!smoke.activeSelf) smoke.SetActive(true);
+        if (baked >= 1) return;
+
+        baked += 0.1f * Time.deltaTime;
+        SetBaked();
+        if (System.Math.Abs(baked - 0.5f) < 1E-2f)
         {
             //speed = 0.5f;
             kimiNormPos = kimi.transform.localPosition.x;
