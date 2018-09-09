@@ -107,7 +107,8 @@ public class PlayerController : MonoBehaviour {
     private void Move(float inputX) {
         if (System.Math.Abs(inputX) < EPSILON) return;
 
-        float move = inputX * speed * Time.deltaTime * (1 - baked);
+        float bakedDistrict = -baked * baked + 1;
+        float move = inputX * speed * Time.deltaTime * bakedDistrict;
 
         Debug.Log(kimi.transform.localPosition);
         if(kimi.transform.localPosition.x >= kimiNormPos - kimiDistrict && kimi.transform.localPosition.x >= -0.12f && inputX < 0f){
