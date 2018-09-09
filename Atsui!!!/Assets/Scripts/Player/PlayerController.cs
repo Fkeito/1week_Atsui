@@ -60,18 +60,22 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetKey(KeyCode.LeftShift)) this.transform.position += 3f * Vector3.up * Time.deltaTime;
             if (Input.GetKeyUp(KeyCode.LeftShift)) rb.isKinematic = false;
 
-            if(Input.GetKeyDown(KeyCode.Space)){
+            if(Input.GetKeyDown(KeyCode.J)){
                 jc.enabled = true;
                 jc.SetProperty(rb, smoke, kimi);
                 manager.GetComponent<ScoreController>().ShowCanvas(true);
                 Destroy(this);
+            }
+
+            if(Input.GetKeyDown(KeyCode.I)){
+                jc.GetItem();
             }
         }
 
         if(jump){
             if(Input.GetKeyDown(KeyCode.UpArrow)){
                 if(Physics.Raycast(this.transform.position, Vector3.down, 1f)){
-                    rb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+                    rb.AddForce(Vector3.up * 6, ForceMode.Impulse);
                     Debug.Log("jump");
                 }
             }
@@ -126,7 +130,7 @@ public class PlayerController : MonoBehaviour {
     private bool isBaked;
     [HideInInspector]
     public bool isBakedByHotSpot;
-    private float bakeSpeed = 0.08f;
+    private float bakeSpeed = 0.05f;
     public void SetBakeSpeed(float speed){
         bakeSpeed = speed;
     }
@@ -199,5 +203,18 @@ public class PlayerController : MonoBehaviour {
         Color c = Color.white;
         c.a = baked;
         shiromi2.color = kimi2.color = c;
+    }
+
+    private IEnumerator DelayMethod(System.Action action, float delayTime = 1f){
+        yield return new WaitForSeconds(delayTime);
+        action();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Item")){
+            jc.GetItem(3);
+            Destroy(other.gameObject);
+        }
     }
 }

@@ -25,8 +25,10 @@ public class ScoreController : MonoBehaviour {
         else if (pc) if(pc.cheatMode){
             height = player.transform.position.y;
         }
-        Debug.Log(height);
+        //Debug.Log(height);
         string s = "";
+
+        //ここきもい
         if (height < 0.1f) s += "0.00 m";
         else if (height < 10) s += (height * 10).ToString(".00") + " m";
         else if (height < 30) s += (45 * (height - 10) + 100).ToString(".00") + " m";
@@ -40,5 +42,7 @@ public class ScoreController : MonoBehaviour {
     public GameObject scoreCanvas;
     public void ShowCanvas(bool visible){
         scoreCanvas.SetActive(visible);
+        height = 0;
+        score.text = "0.00 m";
     }
 }

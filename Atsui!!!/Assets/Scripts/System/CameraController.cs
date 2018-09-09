@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour {
     public float xMin, xMax;
     public float yMin;
     private Vector3 offset;
+    public GameObject button;
 
 	// Use this for initialization
 	void Start () {
@@ -25,6 +26,8 @@ public class CameraController : MonoBehaviour {
         if (tmp.y > yMin) if (tmp.y < this.transform.position.y)
         {
             if (pc != null) if (pc.cheatMode) return;
+
+            if (button != null) button.SetActive(true);
             Destroy(this);
         }
 

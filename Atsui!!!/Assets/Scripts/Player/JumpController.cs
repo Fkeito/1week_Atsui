@@ -9,12 +9,13 @@ public class JumpController : MonoBehaviour {
     private GameObject kimi;
 
     private float time;
-    private float jumpTime = 18f;
+    [SerializeField, Range(2f, 18f)]
+    private float jumpTime = 2f;
 
 	// Use this for initialization
 	void Start () {
         StartCoroutine(DelayMethod(()=>Rotate()));
-        Destroy(smoke.gameObject, 1f);
+        if(smoke) Destroy(smoke.gameObject, 1f);
 	}
 	
 	// Update is called once per frame
@@ -34,12 +35,25 @@ public class JumpController : MonoBehaviour {
     }
     private void Rotate()
     {
-        Debug.Log("a");
-        rb.AddTorque(Vector3.right * 5f * kimi.transform.localPosition.x, ForceMode.Impulse);
+        //Debug.Log("a");
+        rb.AddTorque(Vector3.forward * 5f * kimi.transform.localPosition.x, ForceMode.Impulse);
+    }
+
+    public void GetItem(float plusTime = 1f){
+        jumpTime += plusTime;
     }
 
     private IEnumerator DelayMethod(System.Action action, float delayTime = 1f){
         yield return new WaitForSeconds(delayTime);
         action();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Obstacle")){
+            //Debug.Log("a");
+            rb.velocity = Vector3.zero;
+            Destroy(this);
+        }
     }
 }

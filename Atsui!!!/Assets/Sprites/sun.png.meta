@@ -1,7 +1,9 @@
 fileFormatVersion: 2
-guid: 7afef38a707a449cd8aff3d4007f0ce7
+guid: 18dad9405af20433291d7f2db763fbdc
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: sun1
+    21300002: sun2
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -40,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -104,11 +106,51 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: sun1
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 207
+        width: 360
+        height: 356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be789288e8ded49fe9123615296cb474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sun2
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 563
+        width: 144
+        height: 175
+      alignment: 9
+      pivot: {x: 0.5, y: -1.0492065}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 619d9721db7064fd881d3d5bbb180754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9023b76e2b0f24c83952da6423be736c
     vertices: []
     indices: 
     edges: []
