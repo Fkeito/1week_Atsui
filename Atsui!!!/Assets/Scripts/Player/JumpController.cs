@@ -39,8 +39,11 @@ public class JumpController : MonoBehaviour {
         rb.AddTorque(Vector3.forward * 5f * kimi.transform.localPosition.x, ForceMode.Impulse);
     }
 
+    public UnityEngine.UI.Image[] icons;
+    private int i = 0;
     public void GetItem(float plusTime = 1f){
         jumpTime += plusTime;
+        icons[i++].color = Color.yellow;
     }
 
     private IEnumerator DelayMethod(System.Action action, float delayTime = 1f){
